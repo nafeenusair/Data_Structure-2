@@ -17,55 +17,81 @@ using namespace std;
 vector<int> A;
 vector<int> B;
 vector<int> C;
+int N, M;
+int cnt = 0;
 
 void printTowers() {
-    cout << "A=> ";
-    for (int x : A) {
-        cout << x << " ";
-    } cout << endl;
+    cout << "A=>";
+    if (!A.empty()) cout << "   ";
+    for (int i = 0; i < A.size(); i++) {
+        cout << A[i];
+        if (i < A.size() - 1) cout << " ";
+    }
+    cout << endl;
 
-    cout << "B=> ";
-    for (int y : B) {
-        cout << y << " ";
-    } cout << endl;
+    cout << "B=>";
+    if (!B.empty()) cout << "   ";
+    for (int i = 0; i < B.size(); i++) {
+        cout << B[i];
+        if (i < B.size() - 1) cout << " ";
+    }
+    cout << endl;
 
-    cout << "C=> ";
-    for (int z : C) {
-        cout << z << " ";
-    } cout << endl << endl;
+    cout << "C=>";
+    if (!C.empty()) cout << "   ";
+    for (int i = 0; i < C.size(); i++) {
+        cout << C[i];
+        if (i < C.size() - 1) cout << " ";
+    }
+    cout << endl << endl;
 }
 
 void toh(vector<int> &A, vector<int> &B, vector<int> &C, int n) {
+    if (cnt >= M) return;
     //base
     if (n == 1) {
         int x = A.back();
         A.pop_back();
-        B.push_back(x);
+        C.push_back(x);
+        cnt++;
         printTowers();
         return;
     }
     else {
         toh(A, C, B, n - 1);
 
+        if (cnt >= M) return;
+
         int x = A.back();
         A.pop_back();
-        B.push_back(x);
+        C.push_back(x);
+        cnt++;
         printTowers();
 
-        toh(C, B, A, n - 1);
+        if (cnt >= M) return;
+
+        toh(B, A, C, n - 1);
     }
 }
 
 int main() {
-    int N;
-    cin >> N;
+    int caseNum = 1;
 
-    for (int i = N; i >= 1; i--) {
-        A.push_back(i);
+    while (cin >> N >> M && (N != 0 or M != 0)) {
+        A.clear();
+        B.clear();
+        C.clear();
+        cnt = 0;
+
+        for (int i = N; i >= 1; i--) {
+            A.push_back(i);
+        }
+
+        cout << "Problem #" << caseNum++ << endl << endl;
+
+        printTowers();
+        toh(A, B, C, N);
     }
-
-    printTowers();
-    toh(A, B, C, N);
 
     return 0;
 }
